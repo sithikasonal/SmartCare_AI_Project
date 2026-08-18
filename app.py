@@ -6,13 +6,13 @@ import streamlit as st
 # Page configuration
 st.set_page_config(page_title="SmartCare AI", page_icon="🏥", layout="wide")
 
-# Custom CSS for Green Modern Medical Theme
+# Fixed Custom CSS (Clean Light Theme)
 st.markdown(
     """
     <style>
     /* Main Background */
     .stApp {
-        background-color: #f4f8f6;
+        background-color: #f8faf9;
         font-family: 'Inter', sans-serif;
     }
     
@@ -26,52 +26,32 @@ st.markdown(
     .sub-title {
         color: #5d7a6e;
         font-size: 1rem;
-        margin-bottom: 2rem;
+        margin-bottom: 1.5rem;
     }
 
-    /* Container/Card Styling */
+    /* Form Container / Card */
     div[data-testid="stForm"] {
         background-color: #ffffff;
-        border-radius: 20px;
-        padding: 35px;
-        border: 1px solid #e1ebe5;
-        box-shadow: 0 10px 25px rgba(26, 67, 50, 0.05);
-    }
-    
-    /* Input Labels */
-    label {
-        color: #2c4a3e !important;
-        font-weight: 600 !important;
+        border-radius: 16px;
+        padding: 30px;
+        border: 1px solid #e2ece7;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
     }
 
-    /* Input Controls */
-    .stNumberInput input, .stSelectbox div[data-baseweb="select"] {
-        border-radius: 12px !important;
-        border: 1px solid #d0dfd7 !important;
-        background-color: #fcfdfe !important;
-    }
-
-    /* Submit Button */
+    /* Submit Button Styling */
     div[data-testid="stForm"] button {
-        background: linear-gradient(135deg, #2ecc71 0%, #1abc9c 100%);
+        background-color: #2ecc71 !important;
         color: white !important;
-        border: none;
-        border-radius: 12px;
-        padding: 12px 28px;
-        font-weight: 600;
-        font-size: 1.05rem;
-        width: 100%;
-        box-shadow: 0 4px 15px rgba(46, 204, 113, 0.3);
-        transition: all 0.3s ease;
+        border: none !important;
+        border-radius: 10px !important;
+        padding: 10px 24px !important;
+        font-weight: 600 !important;
+        font-size: 1rem !important;
+        transition: all 0.2s ease-in-out;
     }
     div[data-testid="stForm"] button:hover {
-        background: linear-gradient(135deg, #27ae60 0%, #16a085 100%);
-        transform: translateY(-2px);
-    }
-
-    /* Alert Boxes */
-    .stAlert {
-        border-radius: 14px;
+        background-color: #27ae60 !important;
+        box-shadow: 0 4px 12px rgba(46, 204, 113, 0.3);
     }
     </style>
     """,
@@ -79,14 +59,14 @@ st.markdown(
 )
 
 
-# Gauge Chart Function (Mint-Green Palette)
+# Gauge Chart Function
 def create_gauge_chart(probability_val):
   percentage = probability_val * 100
   fig = go.Figure(
       go.Indicator(
           mode="gauge+number",
           value=percentage,
-          number={"suffix": "%", "font": {"size": 42, "color": "#1a4332"}},
+          number={"suffix": "%", "font": {"size": 40, "color": "#1a4332"}},
           gauge={
               "axis": {
                   "range": [0, 100],
