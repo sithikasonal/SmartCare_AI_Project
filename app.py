@@ -1,16 +1,15 @@
 import joblib
 import pandas as pd
-import plotly.graph_objects as go
 import streamlit as st
 
 # Page configuration
 st.set_page_config(page_title="SmartCare AI", page_icon="🏥", layout="wide")
 
-# Custom CSS matching the Aurora Gradient Theme
+# Custom CSS matching the Dark Theme
 st.markdown(
     """
     <style>
-    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap');
 
     html, body, [class*="css"] {
         font-family: 'Plus Jakarta Sans', sans-serif;
@@ -107,41 +106,73 @@ st.markdown(
         border: 1px solid rgba(255, 255, 255, 0.1) !important;
         color: #ffffff !important;
     }
+
+    /* Gauge Container */
+    .gauge-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 20px 0;
+    }
     </style>
     """,
     unsafe_allow_html=True,
 )
 
 
-# Aurora Theme Gauge Chart
-def create_gauge_chart(probability_val):
-  percentage = probability_val * 100
-  fig = go.Figure(
-      go.Indicator(
-          mode="gauge+number",
-          value=percentage,
-          number={"suffix": "%", "font": {"size": 42, "color": "#FFFFFF"}},
-          gauge={
-              "axis": {
-                  "range": [0, 100],
-                  "tickwidth": 1,
-                  "tickcolor": "#64748B",
-              },
-              "bar": {"color": "#FF4D4F" if percentage >= 50 else "#00F2FE"},
-              "steps": [
-                  {"range": [0, 40], "color": "rgba(0, 242, 254, 0.15)"},
-                  {"range": [40, 70], "color": "rgba(255, 215, 0, 0.15)"},
-                  {"range": [70, 100], "color": "rgba(255, 77, 79, 0.15)"},
-              ],
-          },
-      )
-  )
-  fig.update_layout(
-      height=260,
-      margin=dict(l=20, r=20, t=30, b=20),
-      paper_bgcolor="rgba(0,0,0,0)",
-  )
-  return fig
+# Custom Semi-Arc Semi-Circle Gauge (Matching the provided Image)
+def render_arc_gauge(probability_val):
+  percent = round(probability_val * 100, 1)
+
+  # Semi-circle radius = 90, circumference of semi-circle = π * r = 3.14159 * 90 = 282.74
+  arc_length = 282.74
+
+  # Calculate filled stroke offset according to probability percentage
+  offset = arc_length - (arc_length * (percent / 100.0))
+
+  svg_code = f"""
+    <div class="gauge-container">
+        <svg width="280" height="180" viewBox="0 0 220 140">
+            <defs>
+                <!-- Yellow to Green to Cyan Gradient (Matching image style) -->
+                <linearGradient id="arcGrad" x1="0%" y1="100%" x2="100%" y2="0%">
+                    <stop offset="0%" stop-color="#FFE600" />
+                    <stop offset="45%" stop-color="#A3E635" />
+                    <stop offset="75%" stop-color="#22D3EE" />
+                    <stop offset="100%" stop-color="#00A3FF" />
+                </linearGradient>
+            </defs>
+
+            <!-- Background Dark Track Arc -->
+            <path d="M 20 120 A 90 90 0 0 1 200 120" 
+                  fill="none" 
+                  stroke="#2D3139" 
+                  stroke-width="18" 
+                  stroke-linecap="round" />
+
+            <!-- Active Gradient Meter Arc with Rounded Ends -->
+            <path d="M 20 120 A 90 90 0 0 1 200 120" 
+                  fill="none" 
+                  stroke="url(#arcGrad)" 
+                  stroke-width="18" 
+                  stroke-linecap="round" 
+                  stroke-dasharray="{arc_length}" 
+                  stroke-dashoffset="{offset}" 
+                  style="transition: stroke-dashoffset 1s ease-in-out;" />
+
+            <!-- Percentage Display Text -->
+            <text x="110" y="110" 
+                  font-family="'Plus Jakarta Sans', sans-serif" 
+                  font-size="44" 
+                  font-weight="300" 
+                  fill="#FFFFFF" 
+                  text-anchor="middle">
+                {percent}%
+            </text>
+        </svg>
+    </div>
+    """
+  st.markdown(svg_code, unsafe_allow_html=True)
 
 
 # Model Loading
@@ -242,8 +273,8 @@ if submit:
       )
       is_high_risk = False
 
-    # Gauge Chart Display
-    st.plotly_chart(create_gauge_chart(missing_prob), use_container_width=True)
+    # Render Image-styled Arc Gauge Meter
+    render_arc_gauge(missing_prob)
 
     # Recommended Action Card
     st.subheader("📋 Recommended Action Plan")
