@@ -6,7 +6,7 @@ import streamlit as st
 # Page configuration
 st.set_page_config(page_title="SmartCare AI", page_icon="🏥", layout="wide")
 
-# Custom CSS for Royal Blue Clean Modern Light Theme
+# Custom CSS for Premium Modern Dark Theme (Fixes Overlapping & High Contrast Dropdowns)
 st.markdown(
     """
     <style>
@@ -18,83 +18,84 @@ st.markdown(
     
     /* Overall Background */
     .stApp {
-        background-color: #f4f7fe;
+        background: #0d1117;
+        color: #e6edf3;
     }
     
     /* Header Styling */
     .main-title {
-        color: #1b2559;
+        color: #ffffff;
         font-weight: 700;
-        font-size: 2.3rem;
-        margin-bottom: 0.2rem;
+        font-size: 2.2rem;
         letter-spacing: -0.5px;
     }
     .sub-title {
-        color: #707eae;
+        color: #8b949e;
         font-size: 0.95rem;
         font-weight: 500;
-        margin-bottom: 1.8rem;
+        margin-bottom: 2rem;
     }
 
-    /* Main Form Container / Card */
+    /* Main Form Container - Modern Dark Glass */
     div[data-testid="stForm"] {
-        background-color: #ffffff;
+        background-color: #161b22;
         border-radius: 20px;
         padding: 35px;
-        border: 1px solid #e2ece7;
-        box-shadow: 0px 18px 40px rgba(112, 144, 176, 0.1);
+        border: 1px solid #30363d;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
     }
 
     /* Input Labels */
     label, div[data-testid="stMarkdownContainer"] p {
-        color: #1b2559 !important;
+        color: #c9d1d9 !important;
         font-weight: 600 !important;
         font-size: 0.9rem !important;
     }
 
-    /* Clean Input Fields & Dropdowns (Fixes Blue Overlay Issue) */
+    /* Clean Input Fields, Number Buttons & Dropdowns Fix */
     .stNumberInput input, div[data-baseweb="select"] > div {
-        background-color: #f8fafc !important;
-        border: 1px solid #e2e8f0 !important;
-        color: #1b2559 !important;
-        border-radius: 12px !important;
+        background-color: #21262d !important;
+        border: 1px solid #30363d !important;
+        color: #ffffff !important;
+        border-radius: 10px !important;
     }
 
-    /* Plus / Minus Buttons */
+    /* Plus/Minus Buttons Fix */
     button[aria-label="Increase value"], button[aria-label="Decrease value"] {
-        background-color: #edf2f7 !important;
-        color: #1b2559 !important;
+        background-color: #30363d !important;
+        color: #ffffff !important;
         border-radius: 8px !important;
         border: none !important;
     }
 
-    /* Royal Blue Gradient Button */
+    /* Dropdown Options Popup Fix */
+    ul[data-baseweb="menu"] {
+        background-color: #21262d !important;
+        border: 1px solid #30363d !important;
+    }
+
+    /* Gradient Action Button */
     div[data-testid="stForm"] button[kind="secondaryFormSubmit"] {
-        background: linear-gradient(135deg, #2f54eb 0%, #1d39c4 100%) !important;
+        background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%) !important;
         color: #ffffff !important;
         border: none !important;
-        border-radius: 50px !important;
-        padding: 12px 28px !important;
+        border-radius: 12px !important;
+        padding: 12px 24px !important;
         font-weight: 600 !important;
         font-size: 1rem !important;
         width: 100% !important;
-        box-shadow: 0px 8px 20px rgba(47, 84, 235, 0.25) !important;
+        box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3) !important;
         transition: all 0.2s ease-in-out;
     }
-    
     div[data-testid="stForm"] button[kind="secondaryFormSubmit"]:hover {
-        background: linear-gradient(135deg, #1d39c4 0%, #096dd9 100%) !important;
-        box-shadow: 0px 12px 24px rgba(47, 84, 235, 0.35) !important;
+        background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%) !important;
+        box-shadow: 0 6px 20px rgba(37, 99, 235, 0.5) !important;
     }
 
-    /* Subheaders & Alerts */
-    h3 {
-        color: #1b2559 !important;
-        font-weight: 700 !important;
-    }
-
+    /* Result Alert Cards */
     .stAlert {
-        border-radius: 14px !important;
+        border-radius: 12px !important;
+        border: 1px solid #30363d !important;
     }
     </style>
     """,
@@ -102,25 +103,25 @@ st.markdown(
 )
 
 
-# Royal Blue Gauge Chart
+# High-Contrast Gauge Chart
 def create_gauge_chart(probability_val):
   percentage = probability_val * 100
   fig = go.Figure(
       go.Indicator(
           mode="gauge+number",
           value=percentage,
-          number={"suffix": "%", "font": {"size": 42, "color": "#1B2559"}},
+          number={"suffix": "%", "font": {"size": 42, "color": "#FFFFFF"}},
           gauge={
               "axis": {
                   "range": [0, 100],
                   "tickwidth": 1,
-                  "tickcolor": "#707EAE",
+                  "tickcolor": "#8B949E",
               },
-              "bar": {"color": "#FF4D4F" if percentage >= 50 else "#2F54EB"},
+              "bar": {"color": "#EF4444" if percentage >= 50 else "#10B981"},
               "steps": [
-                  {"range": [0, 40], "color": "#F0F5FF"},
-                  {"range": [40, 70], "color": "#FFFBE6"},
-                  {"range": [70, 100], "color": "#FFF1F0"},
+                  {"range": [0, 40], "color": "rgba(16, 185, 129, 0.15)"},
+                  {"range": [40, 70], "color": "rgba(245, 158, 11, 0.15)"},
+                  {"range": [70, 100], "color": "rgba(239, 68, 68, 0.15)"},
               ],
           },
       )
