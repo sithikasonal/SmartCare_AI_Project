@@ -6,90 +6,95 @@ import streamlit as st
 # Page configuration
 st.set_page_config(page_title="SmartCare AI", page_icon="🏥", layout="wide")
 
-# Custom CSS for Royal Blue Modern Medical Theme
+# Custom CSS for Dark Glassmorphism Theme
 st.markdown(
     """
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
 
-    /* Global Typography & Background */
     html, body, [class*="css"] {
         font-family: 'Plus Jakarta Sans', sans-serif;
     }
     
+    /* Dark Theme Background */
     .stApp {
-        background-color: #f4f7fe;
+        background-color: #0B132B;
+        color: #E0E6ED;
     }
     
     /* Header Styling */
     .main-title {
-        color: #1b2559;
+        color: #FFFFFF;
         font-weight: 700;
         font-size: 2.3rem;
         margin-bottom: 0.2rem;
         letter-spacing: -0.5px;
     }
     .sub-title {
-        color: #a3edd9;
-        color: #707eae;
+        color: #64748B;
         font-size: 0.95rem;
         font-weight: 500;
         margin-bottom: 1.8rem;
     }
 
-    /* Form Card Container */
+    /* Glassmorphism Form Container */
     div[data-testid="stForm"] {
-        background-color: #ffffff;
+        background: rgba(28, 37, 65, 0.6);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
         border-radius: 24px;
         padding: 35px;
-        border: none;
-        box-shadow: 0px 18px 40px rgba(112, 144, 176, 0.12);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        box-shadow: 0px 20px 40px rgba(0, 0, 0, 0.4);
     }
 
     /* Input Labels */
     label {
-        color: #1b2559 !important;
+        color: #94A3B8 !important;
         font-weight: 600 !important;
         font-size: 0.9rem !important;
     }
 
-    /* Input Fields & Dropdowns Styling */
+    /* Dark Input Controls & Dropdowns */
     .stNumberInput input, div[data-baseweb="select"] > div {
         border-radius: 14px !important;
-        border: 1px solid #e9edf7 !important;
-        background-color: #f8fafc !important;
-        color: #1b2559 !important;
+        border: 1px solid rgba(255, 255, 255, 0.1) !important;
+        background-color: #111B35 !important;
+        color: #FFFFFF !important;
     }
 
-    /* Pill-Style Action Button */
+    /* Neon Green / Cyan Pill Action Button */
     div[data-testid="stForm"] button {
-        background: linear-gradient(135deg, #2f54eb 0%, #1d39c4 100%) !important;
-        color: #ffffff !important;
+        background: linear-gradient(135deg, #00F2FE 0%, #4FACFE 100%) !important;
+        color: #0B132B !important;
         border: none !important;
         border-radius: 50px !important;
         padding: 14px 28px !important;
-        font-weight: 600 !important;
+        font-weight: 700 !important;
         font-size: 1rem !important;
         width: 100% !important;
-        box-shadow: 0px 10px 20px rgba(47, 84, 235, 0.3) !important;
+        box-shadow: 0px 10px 25px rgba(0, 242, 254, 0.3) !important;
         transition: all 0.3s ease !important;
     }
     
     div[data-testid="stForm"] button:hover {
-        background: linear-gradient(135deg, #1d39c4 0%, #096dd9 100%) !important;
-        box-shadow: 0px 14px 26px rgba(47, 84, 235, 0.4) !important;
+        background: linear-gradient(135deg, #38EF7D 0%, #11998E 100%) !important;
+        box-shadow: 0px 14px 30px rgba(56, 239, 125, 0.4) !important;
         transform: translateY(-2px);
     }
 
-    /* Subheaders & Info Cards */
+    /* Section Headers */
     h3 {
-        color: #1b2559 !important;
+        color: #FFFFFF !important;
         font-weight: 700 !important;
     }
 
+    /* Alert Boxes */
     .stAlert {
         border-radius: 16px !important;
-        border: none !important;
+        background-color: rgba(28, 37, 65, 0.8) !important;
+        border: 1px solid rgba(255, 255, 255, 0.1) !important;
+        color: #FFFFFF !important;
     }
     </style>
     """,
@@ -97,25 +102,25 @@ st.markdown(
 )
 
 
-# Royal Blue Palette Gauge Chart
+# Dark Theme Gauge Chart
 def create_gauge_chart(probability_val):
   percentage = probability_val * 100
   fig = go.Figure(
       go.Indicator(
           mode="gauge+number",
           value=percentage,
-          number={"suffix": "%", "font": {"size": 42, "color": "#1B2559"}},
+          number={"suffix": "%", "font": {"size": 42, "color": "#FFFFFF"}},
           gauge={
               "axis": {
                   "range": [0, 100],
                   "tickwidth": 1,
-                  "tickcolor": "#707EAE",
+                  "tickcolor": "#64748B",
               },
-              "bar": {"color": "#FF4D4F" if percentage >= 50 else "#2F54EB"},
+              "bar": {"color": "#FF4D4F" if percentage >= 50 else "#00F2FE"},
               "steps": [
-                  {"range": [0, 40], "color": "#F0F5FF"},
-                  {"range": [40, 70], "color": "#FFFBE6"},
-                  {"range": [70, 100], "color": "#FFF1F0"},
+                  {"range": [0, 40], "color": "rgba(0, 242, 254, 0.1)"},
+                  {"range": [40, 70], "color": "rgba(255, 215, 0, 0.1)"},
+                  {"range": [70, 100], "color": "rgba(255, 77, 79, 0.1)"},
               ],
           },
       )
