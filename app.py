@@ -6,7 +6,7 @@ import streamlit as st
 # Page configuration
 st.set_page_config(page_title="SmartCare AI", page_icon="🏥", layout="wide")
 
-# Custom CSS matching the Aurora Gradient Theme
+# Custom CSS matching the Smooth Rounded Pill Inputs & Original Button Colors
 st.markdown(
     """
     <style>
@@ -40,13 +40,13 @@ st.markdown(
         margin-bottom: 2rem;
     }
 
-    /* Translucent Modern Glass Card */
+    /* Translucent Modern Glass Card with High Rounded Edges */
     div[data-testid="stForm"] {
         background: rgba(15, 23, 42, 0.75);
         backdrop-filter: blur(16px);
         -webkit-backdrop-filter: blur(16px);
-        border-radius: 24px;
-        padding: 35px;
+        border-radius: 32px !important;
+        padding: 40px;
         border: 1px solid rgba(255, 255, 255, 0.1);
         box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
     }
@@ -55,43 +55,51 @@ st.markdown(
     label, div[data-testid="stMarkdownContainer"] p {
         color: #e2e8f0 !important;
         font-weight: 600 !important;
-        font-size: 0.9rem !important;
+        font-size: 0.95rem !important;
+        margin-bottom: 6px !important;
     }
 
-    /* Clean Dark Inputs & Dropdowns */
+    /* Big Smooth Fully Rounded Inputs (Pill Shape like Image 3) */
     .stNumberInput input, div[data-baseweb="select"] > div {
-        background-color: rgba(30, 41, 59, 0.8) !important;
-        border: 1px solid rgba(255, 255, 255, 0.12) !important;
+        background-color: rgba(30, 41, 59, 0.85) !important;
+        border: 1px solid rgba(255, 255, 255, 0.15) !important;
         color: #ffffff !important;
-        border-radius: 12px !important;
+        border-radius: 50px !important; /* Fully rounded edge */
+        padding: 8px 20px !important;
+        min-height: 48px !important;
     }
 
-    /* Plus / Minus Buttons */
+    /* Plus / Minus Buttons with Rounded Edges (Keeping Original Colors) */
     button[aria-label="Increase value"], button[aria-label="Decrease value"] {
-        background-color: rgba(51, 65, 85, 0.8) !important;
-        color: #ffffff !important;
-        border-radius: 8px !important;
+        border-radius: 20px !important;
+        min-height: 40px !important;
+        min-width: 40px !important;
+        font-weight: bold !important;
         border: none !important;
+        transition: all 0.2s ease;
     }
 
-    /* Dropdown Options Menu Fix */
+    /* Dropdown Options Menu Style */
     ul[data-baseweb="menu"] {
         background-color: #0f172a !important;
+        border-radius: 20px !important;
         border: 1px solid rgba(255, 255, 255, 0.15) !important;
+        padding: 10px !important;
     }
 
-    /* Gradient Glowing Action Button */
+    /* Main Action Button - Fully Rounded Pill Shape */
     div[data-testid="stForm"] button[kind="secondaryFormSubmit"] {
         background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%) !important;
         color: #030712 !important;
         border: none !important;
         border-radius: 50px !important;
-        padding: 14px 28px !important;
+        padding: 16px 32px !important;
         font-weight: 700 !important;
         font-size: 1rem !important;
         width: 100% !important;
         box-shadow: 0 8px 25px rgba(0, 242, 254, 0.35) !important;
         transition: all 0.3s ease-in-out;
+        margin-top: 10px;
     }
     
     div[data-testid="stForm"] button[kind="secondaryFormSubmit"]:hover {
@@ -100,12 +108,13 @@ st.markdown(
         transform: translateY(-2px);
     }
 
-    /* Alert Styling */
+    /* High / Low Risk Alert Rounded Box */
     .stAlert {
         background-color: rgba(15, 23, 42, 0.85) !important;
-        border-radius: 16px !important;
+        border-radius: 24px !important;
         border: 1px solid rgba(255, 255, 255, 0.1) !important;
         color: #ffffff !important;
+        padding: 18px 24px !important;
     }
     </style>
     """,
