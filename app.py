@@ -6,7 +6,7 @@ import streamlit as st
 # Page configuration
 st.set_page_config(page_title="SmartCare AI", page_icon="🏥", layout="wide")
 
-# Custom CSS for Premium Modern Dark Theme (Fixes Overlapping & High Contrast Dropdowns)
+# Custom CSS matching the Aurora Gradient Theme
 st.markdown(
     """
     <style>
@@ -16,86 +16,96 @@ st.markdown(
         font-family: 'Plus Jakarta Sans', sans-serif;
     }
     
-    /* Overall Background */
+    /* Dynamic Mesh Gradient Background */
     .stApp {
-        background: #0d1117;
-        color: #e6edf3;
+        background: radial-gradient(at 0% 0%, #0d3b66 0px, transparent 50%),
+                    radial-gradient(at 100% 0%, #00b4d8 0px, transparent 50%),
+                    radial-gradient(at 50% 100%, #3a0ca3 0px, transparent 50%),
+                    #0a0e1a;
+        background-attachment: fixed;
+        color: #f8fafc;
     }
     
     /* Header Styling */
     .main-title {
         color: #ffffff;
         font-weight: 700;
-        font-size: 2.2rem;
+        font-size: 2.3rem;
         letter-spacing: -0.5px;
     }
     .sub-title {
-        color: #8b949e;
+        color: #94a3b8;
         font-size: 0.95rem;
         font-weight: 500;
         margin-bottom: 2rem;
     }
 
-    /* Main Form Container - Modern Dark Glass */
+    /* Translucent Modern Glass Card */
     div[data-testid="stForm"] {
-        background-color: #161b22;
-        border-radius: 20px;
+        background: rgba(15, 23, 42, 0.75);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border-radius: 24px;
         padding: 35px;
-        border: 1px solid #30363d;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
     }
 
     /* Input Labels */
     label, div[data-testid="stMarkdownContainer"] p {
-        color: #c9d1d9 !important;
+        color: #e2e8f0 !important;
         font-weight: 600 !important;
         font-size: 0.9rem !important;
     }
 
-    /* Clean Input Fields, Number Buttons & Dropdowns Fix */
+    /* Clean Dark Inputs & Dropdowns */
     .stNumberInput input, div[data-baseweb="select"] > div {
-        background-color: #21262d !important;
-        border: 1px solid #30363d !important;
+        background-color: rgba(30, 41, 59, 0.8) !important;
+        border: 1px solid rgba(255, 255, 255, 0.12) !important;
         color: #ffffff !important;
-        border-radius: 10px !important;
+        border-radius: 12px !important;
     }
 
-    /* Plus/Minus Buttons Fix */
+    /* Plus / Minus Buttons */
     button[aria-label="Increase value"], button[aria-label="Decrease value"] {
-        background-color: #30363d !important;
+        background-color: rgba(51, 65, 85, 0.8) !important;
         color: #ffffff !important;
         border-radius: 8px !important;
         border: none !important;
     }
 
-    /* Dropdown Options Popup Fix */
+    /* Dropdown Options Menu Fix */
     ul[data-baseweb="menu"] {
-        background-color: #21262d !important;
-        border: 1px solid #30363d !important;
+        background-color: #0f172a !important;
+        border: 1px solid rgba(255, 255, 255, 0.15) !important;
     }
 
-    /* Gradient Action Button */
+    /* Gradient Glowing Action Button */
     div[data-testid="stForm"] button[kind="secondaryFormSubmit"] {
-        background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%) !important;
-        color: #ffffff !important;
+        background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%) !important;
+        color: #030712 !important;
         border: none !important;
-        border-radius: 12px !important;
-        padding: 12px 24px !important;
-        font-weight: 600 !important;
+        border-radius: 50px !important;
+        padding: 14px 28px !important;
+        font-weight: 700 !important;
         font-size: 1rem !important;
         width: 100% !important;
-        box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3) !important;
-        transition: all 0.2s ease-in-out;
+        box-shadow: 0 8px 25px rgba(0, 242, 254, 0.35) !important;
+        transition: all 0.3s ease-in-out;
     }
+    
     div[data-testid="stForm"] button[kind="secondaryFormSubmit"]:hover {
-        background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%) !important;
-        box-shadow: 0 6px 20px rgba(37, 99, 235, 0.5) !important;
+        background: linear-gradient(135deg, #38ef7d 0%, #11998e 100%) !important;
+        box-shadow: 0 10px 30px rgba(56, 239, 125, 0.45) !important;
+        transform: translateY(-2px);
     }
 
-    /* Result Alert Cards */
+    /* Alert Styling */
     .stAlert {
-        border-radius: 12px !important;
-        border: 1px solid #30363d !important;
+        background-color: rgba(15, 23, 42, 0.85) !important;
+        border-radius: 16px !important;
+        border: 1px solid rgba(255, 255, 255, 0.1) !important;
+        color: #ffffff !important;
     }
     </style>
     """,
@@ -103,7 +113,7 @@ st.markdown(
 )
 
 
-# High-Contrast Gauge Chart
+# Aurora Theme Gauge Chart
 def create_gauge_chart(probability_val):
   percentage = probability_val * 100
   fig = go.Figure(
@@ -115,13 +125,13 @@ def create_gauge_chart(probability_val):
               "axis": {
                   "range": [0, 100],
                   "tickwidth": 1,
-                  "tickcolor": "#8B949E",
+                  "tickcolor": "#64748B",
               },
-              "bar": {"color": "#EF4444" if percentage >= 50 else "#10B981"},
+              "bar": {"color": "#FF4D4F" if percentage >= 50 else "#00F2FE"},
               "steps": [
-                  {"range": [0, 40], "color": "rgba(16, 185, 129, 0.15)"},
-                  {"range": [40, 70], "color": "rgba(245, 158, 11, 0.15)"},
-                  {"range": [70, 100], "color": "rgba(239, 68, 68, 0.15)"},
+                  {"range": [0, 40], "color": "rgba(0, 242, 254, 0.15)"},
+                  {"range": [40, 70], "color": "rgba(255, 215, 0, 0.15)"},
+                  {"range": [70, 100], "color": "rgba(255, 77, 79, 0.15)"},
               ],
           },
       )
