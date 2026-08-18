@@ -2,85 +2,97 @@ import pickle
 import pandas as pd
 import streamlit as st
 
-st.set_page_config(page_title="SmartCare AI", page_icon="🏥", layout="centered")
+st.set_page_config(page_title="SmartCare AI", page_icon="🏥", layout="wide")
 
 
 @st.cache_resource
 def load_model():
     with open("model.pkl", "rb") as f:
-        model_pipeline = pickle.load(f)
-    return model_pipeline
+        return pickle.load(f)
 
 
-model_pipeline = load_model()
+try:
+    model_pipeline = load_model()
+except Exception as e:
+    st.error(
+        f"Model එක Load කිරීමට අපහසුයි. 'model.pkl' file එක තිබේදැයි බලන්න. Error: {e}"
+    )
 
-st.title("🏥 SmartCare AI - Appointment No-Show Predictor")
-st.write("Enter patient details below to predict no-show probability.")
+st.title("🏥 Appointment No-Show Predictor")
 
 with st.form("prediction_form"):
     col1, col2 = st.columns(2)
 
     with col1:
-        age = st.number_input("Age", min_value=0, max_value=100, value=30)
+        age = st.number_input("Age (වයස)", min_value=0, max_value=120, value=30)
         gender = st.selectbox("Gender", ["Male", "Female"])
-        department = st.selectbox(
-            "Department",
+        lead_time = st.number_input(
+            "Lead Time (අත්තිකාරම් දින ගණන)", min_value=0, value=9
+        )
+        previous_no_shows = st.number_input(
+            "Previous No-Shows (කලින් නොපැමිණි වාර)", min_value=0, value=14
+        )
+
+    with col2:
+        distance = st.number_input(
+            "Distance to Clinic (km)", min_value=0.0, value=100.0, step=1.0
+        )
+        reminder_sent = st.selectbox(
+            "Reminder Sent (පණිවිඩයක් යැවුවේද?)", ["No", "Yes"]
+        )
+        specialty = st.selectbox(
+            "Specialty (වෛද්‍ය අංශය)",
             [
-                "General Medicine",
+                "General Practice",
                 "Cardiology",
                 "Pediatrics",
                 "Radiology",
                 "Neurology",
                 "Orthopedics",
-                "Laboratory Services",
             ],
         )
-        waiting_days = st.number_input("Waiting Days", min_value=0, value=2)
 
-    with col2:
-        previous_appointments = st.number_input(
-            "Previous Appointments", min_value=0, value=1
-        )
-        missed_previous = st.number_input(
-            "Missed Previous Appointments", min_value=0, value=0
-        )
-        total_bill = st.number_input(
-            "Total Bill (LKR)", min_value=0, value=2000
-        )
-        payment_status = st.selectbox(
-            "Payment Status", ["Paid", "Unpaid", "Partially Paid"]
-        )
-
-    submit = st.form_submit_button("Predict No-Show Risk")
+    submit = st.form_submit_button("🔮 Predict Risk")
 
 if submit:
-    input_data = {
+    # Colab එකේ Train කළ Column Names වලට අනුගතව mapping එක සෑදීම
+    reminder_val = 1 if reminder_sent == "Yes" else 0
+
+    input_dict = {
         "age": age,
-        "waiting_days": waiting_days,
-        "previous_appointments": previous_appointments,
-        "missed_previous_appointments": missed_previous,
-        "total_bill_lkr": total_bill,
+        "waiting_days": lead_time,  # Lead time -> waiting_days ලෙස
+        "previous_appointments": previous_no_shows
+        + 2,  # total estimation
+        "missed_previous_appointments": previous_no_shows,
+        "total_bill_lkr": 2000,  # default
         "gender": gender,
-        "department": department,
-        "payment_status": payment_status,
+        "department": (
+            "General Medicine"
+            if specialty == "General Practice"
+            else specialty
+        ),
+        "payment_status": "Paid",
     }
 
-    df_input = pd.DataFrame([input_data])
+    df_input = pd.DataFrame([input_dict])
 
-    proba = model_pipeline.predict_proba(df_input)[0]
-    attending_prob = proba[0]
-    prob_no_show = proba[1]
+    try:
+        proba = model_pipeline.predict_proba(df_input)[0]
+        attending_prob = proba[0]
+        missing_prob = proba[1]
 
-    st.markdown("---")
+        st.markdown("---")
+        st.subheader("📊 Prediction Result:")
 
-    st.write(f"📊 **Attendance Probability:** {attending_prob:.1%}")
-    st.write(f"⚠️ **No-Show Risk Probability:** {prob_no_show:.1%}")
+        # Previous No-Shows 14ක් වැනි වැඩි අගයක් තිබේ නම් High Risk ලෙස පෙන්වීමට
+        if missing_prob >= 0.50 or previous_no_shows >= 3 or lead_time > 14:
+            st.error(
+                f"❌ **High Risk (Likely to Miss)** (පැමිණීමේ සම්භාවිතාව: {attending_prob:.1%})"
+            )
+        else:
+            st.success(
+                f"✅ **Low Risk (Likely to Show Up)** (පැමිණීමේ සම්භාවිතාව: {attending_prob:.1%})"
+            )
 
-    missed_ratio = missed_previous / max(1, previous_appointments)
-
-    if prob_no_show >= 0.50 or missed_ratio >= 0.3 or waiting_days > 7:
-        st.error("⚠️ **High Risk:** The patient is likely to MISS the appointment.")
-    else:
-        st.success(
-            "✅ **Low Risk:** The patient is likely to ATTEND the appointment."
-        )
+    except Exception as err:
+        st.error(f"Prediction : {err}")
