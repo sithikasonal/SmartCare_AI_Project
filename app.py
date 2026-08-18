@@ -3,8 +3,10 @@ import pandas as pd
 import plotly.graph_objects as go
 import streamlit as st
 
+# Page configuration
 st.set_page_config(page_title="SmartCare AI", page_icon="🏥", layout="wide")
 
+# Custom CSS matching the Smooth Rounded Inputs & Glass UI
 st.markdown(
     """
     <style>
@@ -14,6 +16,7 @@ st.markdown(
         font-family: 'Plus Jakarta Sans', sans-serif;
     }
     
+    /* Dynamic Mesh Gradient Background */
     .stApp {
         background: radial-gradient(at 0% 0%, #0d3b66 0px, transparent 50%),
                     radial-gradient(at 100% 0%, #00b4d8 0px, transparent 50%),
@@ -23,6 +26,7 @@ st.markdown(
         color: #f8fafc;
     }
     
+    /* Header Styling */
     .main-title {
         color: #ffffff;
         font-weight: 700;
@@ -36,35 +40,44 @@ st.markdown(
         margin-bottom: 2rem;
     }
 
+    /* Translucent Modern Glass Card with High Rounded Edges */
     div[data-testid="stForm"] {
         background: rgba(15, 23, 42, 0.75);
         backdrop-filter: blur(16px);
         -webkit-backdrop-filter: blur(16px);
-        border-radius: 24px;
-        padding: 35px;
+        border-radius: 32px !important;
+        padding: 40px;
         border: 1px solid rgba(255, 255, 255, 0.1);
         box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
     }
 
+    /* Input Labels */
     label, div[data-testid="stMarkdownContainer"] p {
         color: #e2e8f0 !important;
         font-weight: 600 !important;
-        font-size: 0.9rem !important;
+        font-size: 0.95rem !important;
+        margin-bottom: 6px !important;
     }
 
+    /* Big Smooth Fully Rounded Inputs */
     .stNumberInput input, div[data-baseweb="select"] > div {
-        background-color: rgba(30, 41, 59, 0.8) !important;
-        border: 1px solid rgba(255, 255, 255, 0.12) !important;
+        background-color: rgba(30, 41, 59, 0.85) !important;
+        border: 1px solid rgba(255, 255, 255, 0.15) !important;
         color: #ffffff !important;
-        border-radius: 12px !important;
+        border-radius: 50px !important;
+        padding: 8px 20px !important;
+        min-height: 48px !important;
     }
 
+    /* Plus / Minus Buttons */
     button[aria-label="Increase value"], button[aria-label="Decrease value"] {
         background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%) !important;
         color: #ffffff !important;
-        border-radius: 8px !important;
-        border: none !important;
+        border-radius: 20px !important;
+        min-height: 40px !important;
+        min-width: 40px !important;
         font-weight: bold !important;
+        border: none !important;
         transition: all 0.2s ease;
     }
 
@@ -81,22 +94,27 @@ st.markdown(
         color: #000000 !important;
     }
 
+    /* Dropdown Options Menu Style */
     ul[data-baseweb="menu"] {
         background-color: #0f172a !important;
+        border-radius: 20px !important;
         border: 1px solid rgba(255, 255, 255, 0.15) !important;
+        padding: 10px !important;
     }
 
+    /* Main Action Button - Fully Rounded Pill Shape */
     div[data-testid="stForm"] button[kind="secondaryFormSubmit"] {
         background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%) !important;
         color: #030712 !important;
         border: none !important;
         border-radius: 50px !important;
-        padding: 14px 28px !important;
+        padding: 16px 32px !important;
         font-weight: 700 !important;
         font-size: 1rem !important;
         width: 100% !important;
         box-shadow: 0 8px 25px rgba(0, 242, 254, 0.35) !important;
         transition: all 0.3s ease-in-out;
+        margin-top: 10px;
     }
     
     div[data-testid="stForm"] button[kind="secondaryFormSubmit"]:hover {
@@ -105,11 +123,13 @@ st.markdown(
         transform: translateY(-2px);
     }
 
+    /* High / Low Risk Alert Rounded Box */
     .stAlert {
         background-color: rgba(15, 23, 42, 0.85) !important;
-        border-radius: 16px !important;
+        border-radius: 24px !important;
         border: 1px solid rgba(255, 255, 255, 0.1) !important;
         color: #ffffff !important;
+        padding: 18px 24px !important;
     }
     </style>
     """,
@@ -117,36 +137,78 @@ st.markdown(
 )
 
 
-def create_gauge_chart(probability_val):
-  percentage = probability_val * 100
-  fig = go.Figure(
-      go.Indicator(
-          mode="gauge+number",
-          value=percentage,
-          number={"suffix": "%", "font": {"size": 42, "color": "#FFFFFF"}},
-          gauge={
-              "axis": {
-                  "range": [0, 100],
-                  "tickwidth": 1,
-                  "tickcolor": "#64748B",
-              },
-              "bar": {"color": "#FF4D4F" if percentage >= 50 else "#00F2FE"},
-              "steps": [
-                  {"range": [0, 40], "color": "rgba(0, 242, 254, 0.15)"},
-                  {"range": [40, 70], "color": "rgba(255, 215, 0, 0.15)"},
-                  {"range": [70, 100], "color": "rgba(255, 77, 79, 0.15)"},
-              ],
-          },
+# Circular Multi-Ring Radial Meter Chart (Matching image_90d198)
+def create_circular_meter(probability_val):
+  risk_percent = round(probability_val * 100, 1)
+  attend_percent = round((1 - probability_val) * 100, 1)
+
+  fig = go.Figure()
+
+  # Outer Background Track
+  fig.add_trace(
+      go.Pie(
+          values=[100],
+          hole=0.82,
+          marker=dict(colors=["rgba(255, 255, 255, 0.05)"]),
+          hoverinfo="none",
+          textinfo="none",
+          showlegend=False,
       )
   )
+
+  # Outer Ring - Risk Probability Ring
+  risk_color = (
+      "rgba(255, 77, 79, 0.9)"
+      if risk_percent >= 50
+      else "rgba(79, 70, 229, 0.9)"
+  )
+  fig.add_trace(
+      go.Pie(
+          values=[risk_percent, 100 - risk_percent],
+          hole=0.74,
+          marker=dict(colors=[risk_color, "rgba(0,0,0,0)"]),
+          hoverinfo="none",
+          textinfo="none",
+          direction="clockwise",
+          rotation=90,
+          showlegend=False,
+      )
+  )
+
+  # Inner Ring - Attendance Probability Ring
+  fig.add_trace(
+      go.Pie(
+          values=[attend_percent, 100 - attend_percent],
+          hole=0.58,
+          marker=dict(colors=["rgba(129, 140, 248, 0.65)", "rgba(0,0,0,0)"]),
+          hoverinfo="none",
+          textinfo="none",
+          direction="clockwise",
+          rotation=90,
+          showlegend=False,
+      )
+  )
+
+  # Center Text Display
   fig.update_layout(
-      height=260,
-      margin=dict(l=20, r=20, t=30, b=20),
+      annotations=[
+          dict(
+              text=f"<b>{risk_percent}%</b>",
+              x=0.5,
+              y=0.5,
+              font=dict(size=38, color="#FFFFFF", family="Plus Jakarta Sans"),
+              showarrow=False,
+          )
+      ],
+      height=300,
+      margin=dict(l=10, r=10, t=20, b=20),
       paper_bgcolor="rgba(0,0,0,0)",
+      plot_bgcolor="rgba(0,0,0,0)",
   )
   return fig
 
 
+# Model Loading
 @st.cache_resource
 def load_model():
   try:
@@ -160,6 +222,7 @@ try:
 except Exception as e:
   st.error(f"Model එක Load කිරීමට අපහසුයි. Error: {e}")
 
+# Header UI
 st.markdown(
     '<div class="main-title">🏥 Appointment No-Show Predictor</div>',
     unsafe_allow_html=True,
@@ -229,6 +292,7 @@ if submit:
 
     st.markdown("---")
 
+    # High / Low Risk Alert
     if missing_prob >= 0.50 or previous_no_shows >= 3 or lead_time > 14:
       st.error(
           f"⚠️ **HIGH RISK** — Predicted probability of 30-day no-show:"
@@ -242,8 +306,12 @@ if submit:
       )
       is_high_risk = False
 
-    st.plotly_chart(create_gauge_chart(missing_prob), use_container_width=True)
+    # Circular Multi-Ring Radial Meter Display
+    st.plotly_chart(
+        create_circular_meter(missing_prob), use_container_width=True
+    )
 
+    # Recommended Action Card
     st.subheader("📋 Recommended Action Plan")
     if is_high_risk:
       st.info("""
