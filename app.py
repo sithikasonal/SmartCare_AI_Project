@@ -120,21 +120,17 @@ st.markdown(
 )
 
 
-# Custom Semi-Arc Semi-Circle Gauge (Matching the provided Image)
+# Custom Semi-Arc Gauge Meter
 def render_arc_gauge(probability_val):
-  percent = round(probability_val * 100, 1)
+  percent = round(probability_val * 100)
 
-  # Semi-circle radius = 90, circumference of semi-circle = π * r = 3.14159 * 90 = 282.74
   arc_length = 282.74
-
-  # Calculate filled stroke offset according to probability percentage
   offset = arc_length - (arc_length * (percent / 100.0))
 
   svg_code = f"""
     <div class="gauge-container">
-        <svg width="280" height="180" viewBox="0 0 220 140">
+        <svg width="280" height="180" viewBox="0 0 220 140" xmlns="http://www.w3.org/2000/svg">
             <defs>
-                <!-- Yellow to Green to Cyan Gradient (Matching image style) -->
                 <linearGradient id="arcGrad" x1="0%" y1="100%" x2="100%" y2="0%">
                     <stop offset="0%" stop-color="#FFE600" />
                     <stop offset="45%" stop-color="#A3E635" />
@@ -150,7 +146,7 @@ def render_arc_gauge(probability_val):
                   stroke-width="18" 
                   stroke-linecap="round" />
 
-            <!-- Active Gradient Meter Arc with Rounded Ends -->
+            <!-- Active Gradient Meter Arc -->
             <path d="M 20 120 A 90 90 0 0 1 200 120" 
                   fill="none" 
                   stroke="url(#arcGrad)" 
@@ -163,12 +159,10 @@ def render_arc_gauge(probability_val):
             <!-- Percentage Display Text -->
             <text x="110" y="110" 
                   font-family="'Plus Jakarta Sans', sans-serif" 
-                  font-size="44" 
+                  font-size="42" 
                   font-weight="300" 
                   fill="#FFFFFF" 
-                  text-anchor="middle">
-                {percent}%
-            </text>
+                  text-anchor="middle">{percent}%</text>
         </svg>
     </div>
     """
@@ -273,7 +267,7 @@ if submit:
       )
       is_high_risk = False
 
-    # Render Image-styled Arc Gauge Meter
+    # Render Gauge Meter
     render_arc_gauge(missing_prob)
 
     # Recommended Action Card
