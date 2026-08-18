@@ -6,52 +6,90 @@ import streamlit as st
 # Page configuration
 st.set_page_config(page_title="SmartCare AI", page_icon="🏥", layout="wide")
 
-# Fixed Custom CSS (Clean Light Theme)
+# Custom CSS for Royal Blue Modern Medical Theme
 st.markdown(
     """
     <style>
-    /* Main Background */
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+
+    /* Global Typography & Background */
+    html, body, [class*="css"] {
+        font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+    
     .stApp {
-        background-color: #f8faf9;
-        font-family: 'Inter', sans-serif;
+        background-color: #f4f7fe;
     }
     
     /* Header Styling */
     .main-title {
-        color: #1a4332;
+        color: #1b2559;
         font-weight: 700;
-        font-size: 2.2rem;
+        font-size: 2.3rem;
         margin-bottom: 0.2rem;
+        letter-spacing: -0.5px;
     }
     .sub-title {
-        color: #5d7a6e;
-        font-size: 1rem;
-        margin-bottom: 1.5rem;
+        color: #a3edd9;
+        color: #707eae;
+        font-size: 0.95rem;
+        font-weight: 500;
+        margin-bottom: 1.8rem;
     }
 
-    /* Form Container / Card */
+    /* Form Card Container */
     div[data-testid="stForm"] {
         background-color: #ffffff;
-        border-radius: 16px;
-        padding: 30px;
-        border: 1px solid #e2ece7;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+        border-radius: 24px;
+        padding: 35px;
+        border: none;
+        box-shadow: 0px 18px 40px rgba(112, 144, 176, 0.12);
     }
 
-    /* Submit Button Styling */
+    /* Input Labels */
+    label {
+        color: #1b2559 !important;
+        font-weight: 600 !important;
+        font-size: 0.9rem !important;
+    }
+
+    /* Input Fields & Dropdowns Styling */
+    .stNumberInput input, div[data-baseweb="select"] > div {
+        border-radius: 14px !important;
+        border: 1px solid #e9edf7 !important;
+        background-color: #f8fafc !important;
+        color: #1b2559 !important;
+    }
+
+    /* Pill-Style Action Button */
     div[data-testid="stForm"] button {
-        background-color: #2ecc71 !important;
-        color: white !important;
+        background: linear-gradient(135deg, #2f54eb 0%, #1d39c4 100%) !important;
+        color: #ffffff !important;
         border: none !important;
-        border-radius: 10px !important;
-        padding: 10px 24px !important;
+        border-radius: 50px !important;
+        padding: 14px 28px !important;
         font-weight: 600 !important;
         font-size: 1rem !important;
-        transition: all 0.2s ease-in-out;
+        width: 100% !important;
+        box-shadow: 0px 10px 20px rgba(47, 84, 235, 0.3) !important;
+        transition: all 0.3s ease !important;
     }
+    
     div[data-testid="stForm"] button:hover {
-        background-color: #27ae60 !important;
-        box-shadow: 0 4px 12px rgba(46, 204, 113, 0.3);
+        background: linear-gradient(135deg, #1d39c4 0%, #096dd9 100%) !important;
+        box-shadow: 0px 14px 26px rgba(47, 84, 235, 0.4) !important;
+        transform: translateY(-2px);
+    }
+
+    /* Subheaders & Info Cards */
+    h3 {
+        color: #1b2559 !important;
+        font-weight: 700 !important;
+    }
+
+    .stAlert {
+        border-radius: 16px !important;
+        border: none !important;
     }
     </style>
     """,
@@ -59,25 +97,25 @@ st.markdown(
 )
 
 
-# Gauge Chart Function
+# Royal Blue Palette Gauge Chart
 def create_gauge_chart(probability_val):
   percentage = probability_val * 100
   fig = go.Figure(
       go.Indicator(
           mode="gauge+number",
           value=percentage,
-          number={"suffix": "%", "font": {"size": 40, "color": "#1a4332"}},
+          number={"suffix": "%", "font": {"size": 42, "color": "#1B2559"}},
           gauge={
               "axis": {
                   "range": [0, 100],
                   "tickwidth": 1,
-                  "tickcolor": "#5d7a6e",
+                  "tickcolor": "#707EAE",
               },
-              "bar": {"color": "#e74c3c" if percentage >= 50 else "#2ecc71"},
+              "bar": {"color": "#FF4D4F" if percentage >= 50 else "#2F54EB"},
               "steps": [
-                  {"range": [0, 40], "color": "#e8f8f0"},
-                  {"range": [40, 70], "color": "#fef9e7"},
-                  {"range": [70, 100], "color": "#fadbd8"},
+                  {"range": [0, 40], "color": "#F0F5FF"},
+                  {"range": [40, 70], "color": "#FFFBE6"},
+                  {"range": [70, 100], "color": "#FFF1F0"},
               ],
           },
       )
