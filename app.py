@@ -3,10 +3,8 @@ import pandas as pd
 import plotly.graph_objects as go
 import streamlit as st
 
-# Page configuration
 st.set_page_config(page_title="SmartCare AI", page_icon="🏥", layout="wide")
 
-# Custom CSS matching the Smooth Rounded Pill Inputs & Original Button Colors
 st.markdown(
     """
     <style>
@@ -16,7 +14,6 @@ st.markdown(
         font-family: 'Plus Jakarta Sans', sans-serif;
     }
     
-    /* Dynamic Mesh Gradient Background */
     .stApp {
         background: radial-gradient(at 0% 0%, #0d3b66 0px, transparent 50%),
                     radial-gradient(at 100% 0%, #00b4d8 0px, transparent 50%),
@@ -26,7 +23,6 @@ st.markdown(
         color: #f8fafc;
     }
     
-    /* Header Styling */
     .main-title {
         color: #ffffff;
         font-weight: 700;
@@ -40,66 +36,67 @@ st.markdown(
         margin-bottom: 2rem;
     }
 
-    /* Translucent Modern Glass Card with High Rounded Edges */
     div[data-testid="stForm"] {
         background: rgba(15, 23, 42, 0.75);
         backdrop-filter: blur(16px);
         -webkit-backdrop-filter: blur(16px);
-        border-radius: 32px !important;
-        padding: 40px;
+        border-radius: 24px;
+        padding: 35px;
         border: 1px solid rgba(255, 255, 255, 0.1);
         box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
     }
 
-    /* Input Labels */
     label, div[data-testid="stMarkdownContainer"] p {
         color: #e2e8f0 !important;
         font-weight: 600 !important;
-        font-size: 0.95rem !important;
-        margin-bottom: 6px !important;
+        font-size: 0.9rem !important;
     }
 
-    /* Big Smooth Fully Rounded Inputs (Pill Shape like Image 3) */
     .stNumberInput input, div[data-baseweb="select"] > div {
-        background-color: rgba(30, 41, 59, 0.85) !important;
-        border: 1px solid rgba(255, 255, 255, 0.15) !important;
+        background-color: rgba(30, 41, 59, 0.8) !important;
+        border: 1px solid rgba(255, 255, 255, 0.12) !important;
         color: #ffffff !important;
-        border-radius: 50px !important; /* Fully rounded edge */
-        padding: 8px 20px !important;
-        min-height: 48px !important;
+        border-radius: 12px !important;
     }
 
-    /* Plus / Minus Buttons with Rounded Edges (Keeping Original Colors) */
     button[aria-label="Increase value"], button[aria-label="Decrease value"] {
-        border-radius: 20px !important;
-        min-height: 40px !important;
-        min-width: 40px !important;
-        font-weight: bold !important;
+        background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%) !important;
+        color: #ffffff !important;
+        border-radius: 8px !important;
         border: none !important;
+        font-weight: bold !important;
         transition: all 0.2s ease;
     }
 
-    /* Dropdown Options Menu Style */
-    ul[data-baseweb="menu"] {
-        background-color: #0f172a !important;
-        border-radius: 20px !important;
-        border: 1px solid rgba(255, 255, 255, 0.15) !important;
-        padding: 10px !important;
+    button[aria-label="Increase value"]:hover, button[aria-label="Decrease value"]:hover {
+        background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%) !important;
+        color: #ffffff !important;
     }
 
-    /* Main Action Button - Fully Rounded Pill Shape */
+    button[aria-label="Increase value"]:active, 
+    button[aria-label="Decrease value"]:active,
+    button[aria-label="Increase value"]:focus, 
+    button[aria-label="Decrease value"]:focus {
+        background: #60a5fa !important;
+        color: #000000 !important;
+    }
+
+    ul[data-baseweb="menu"] {
+        background-color: #0f172a !important;
+        border: 1px solid rgba(255, 255, 255, 0.15) !important;
+    }
+
     div[data-testid="stForm"] button[kind="secondaryFormSubmit"] {
         background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%) !important;
         color: #030712 !important;
         border: none !important;
         border-radius: 50px !important;
-        padding: 16px 32px !important;
+        padding: 14px 28px !important;
         font-weight: 700 !important;
         font-size: 1rem !important;
         width: 100% !important;
         box-shadow: 0 8px 25px rgba(0, 242, 254, 0.35) !important;
         transition: all 0.3s ease-in-out;
-        margin-top: 10px;
     }
     
     div[data-testid="stForm"] button[kind="secondaryFormSubmit"]:hover {
@@ -108,13 +105,11 @@ st.markdown(
         transform: translateY(-2px);
     }
 
-    /* High / Low Risk Alert Rounded Box */
     .stAlert {
         background-color: rgba(15, 23, 42, 0.85) !important;
-        border-radius: 24px !important;
+        border-radius: 16px !important;
         border: 1px solid rgba(255, 255, 255, 0.1) !important;
         color: #ffffff !important;
-        padding: 18px 24px !important;
     }
     </style>
     """,
@@ -122,7 +117,6 @@ st.markdown(
 )
 
 
-# Aurora Theme Gauge Chart
 def create_gauge_chart(probability_val):
   percentage = probability_val * 100
   fig = go.Figure(
@@ -153,7 +147,6 @@ def create_gauge_chart(probability_val):
   return fig
 
 
-# Model Loading
 @st.cache_resource
 def load_model():
   try:
@@ -167,7 +160,6 @@ try:
 except Exception as e:
   st.error(f"Model එක Load කිරීමට අපහසුයි. Error: {e}")
 
-# Header UI
 st.markdown(
     '<div class="main-title">🏥 Appointment No-Show Predictor</div>',
     unsafe_allow_html=True,
@@ -237,7 +229,6 @@ if submit:
 
     st.markdown("---")
 
-    # High / Low Risk Alert
     if missing_prob >= 0.50 or previous_no_shows >= 3 or lead_time > 14:
       st.error(
           f"⚠️ **HIGH RISK** — Predicted probability of 30-day no-show:"
@@ -251,10 +242,8 @@ if submit:
       )
       is_high_risk = False
 
-    # Gauge Chart Display
     st.plotly_chart(create_gauge_chart(missing_prob), use_container_width=True)
 
-    # Recommended Action Card
     st.subheader("📋 Recommended Action Plan")
     if is_high_risk:
       st.info("""
