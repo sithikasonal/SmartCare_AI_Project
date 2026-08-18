@@ -106,30 +106,22 @@ st.markdown(
         border: 1px solid rgba(255, 255, 255, 0.1) !important;
         color: #ffffff !important;
     }
-
-    /* Gauge Container */
-    .gauge-container {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        margin: 20px 0;
-    }
     </style>
     """,
     unsafe_allow_html=True,
 )
 
 
-# Custom Semi-Arc Gauge Meter
+# Arc Gauge Meter Function
 def render_arc_gauge(probability_val):
-  percent = round(probability_val * 100)
+  percent = max(0, min(100, int(round(probability_val * 100))))
 
   arc_length = 282.74
   offset = arc_length - (arc_length * (percent / 100.0))
 
   svg_code = f"""
-    <div class="gauge-container">
-        <svg width="280" height="180" viewBox="0 0 220 140" xmlns="http://www.w3.org/2000/svg">
+    <div style="display: flex; justify-content: center; align-items: center; margin: 25px 0;">
+        <svg width="280" height="170" viewBox="0 0 220 140" xmlns="http://www.w3.org/2000/svg">
             <defs>
                 <linearGradient id="arcGrad" x1="0%" y1="100%" x2="100%" y2="0%">
                     <stop offset="0%" stop-color="#FFE600" />
@@ -139,14 +131,14 @@ def render_arc_gauge(probability_val):
                 </linearGradient>
             </defs>
 
-            <!-- Background Dark Track Arc -->
+            <!-- Background Track -->
             <path d="M 20 120 A 90 90 0 0 1 200 120" 
                   fill="none" 
                   stroke="#2D3139" 
                   stroke-width="18" 
                   stroke-linecap="round" />
 
-            <!-- Active Gradient Meter Arc -->
+            <!-- Active Gradient Arc -->
             <path d="M 20 120 A 90 90 0 0 1 200 120" 
                   fill="none" 
                   stroke="url(#arcGrad)" 
@@ -154,10 +146,10 @@ def render_arc_gauge(probability_val):
                   stroke-linecap="round" 
                   stroke-dasharray="{arc_length}" 
                   stroke-dashoffset="{offset}" 
-                  style="transition: stroke-dashoffset 1s ease-in-out;" />
+                  style="transition: stroke-dashoffset 0.8s ease-in-out;" />
 
-            <!-- Percentage Display Text -->
-            <text x="110" y="110" 
+            <!-- Percentage Center Text -->
+            <text x="110" y="112" 
                   font-family="'Plus Jakarta Sans', sans-serif" 
                   font-size="42" 
                   font-weight="300" 
